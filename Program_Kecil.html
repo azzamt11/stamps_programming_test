@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class= "header">
+        <div class= "title">Mini Test 1: Program Kecil</div>
+        <div class= "subtitle">Developer: Abdullah Azzam</div>
+    </div>
+    <div class= "main">
+        <button class= "button" id= "button" onclick= "run()">Run</button>
+    </div>
+    <div class= "result" id= "result"></div>
+</body>
+
+<style>
+    body {
+        height: 500px;
+        width: 99vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+    }
+
+    .header {
+        height: 100px;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .title {
+        font-size: 25px;
+        color: #552222;
+        font-weight: bold;
+        width: 80vw;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .subtitle {
+        height: 50px;
+        font-size: 18px;
+        color: #333333;
+    }
+     
+    .main {
+        height: 150px;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .input {
+        height: 40px;
+        width: 80vw;
+        border-radius: 6px;
+        border-color: grey;
+        color: black;
+        padding: 5px;
+        box-sizing: border-box;
+        font-size: 20px;
+    }
+
+    .button {
+        margin-top: 15px;
+        height: 40px;
+        width: 200px;
+        font-size: 20px;
+        color: black;
+        background-color: aquamarine;
+        border-radius: 5px;
+    }
+
+    .button:active {
+        background-color: black;
+        color: white;
+    }
+
+    .result {
+        height: 200px;
+        width: 80vw;
+        border-color: #222222;
+        border-radius: 7px;
+        border-style: solid;
+        border-width: 1px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 20px 10px 20px;
+        font-size: 18px;
+        text-align: center;
+        box-sizing: border-box;
+        word-break: break-all;
+    }
+
+
+</style>
+
+<script>
+
+// ---------------------------------------Program Script---------------------------------------------//
+
+function run() {
+
+    //initiating the array
+    var array= Array.from({length: 100}, (_, i) => 100- i);
+
+    //prime generator
+    let primes= [2];
+    for(let i=2; i< array.length; i++) {
+        var number= i;
+
+        var index= 0;
+        while(number % primes[index]!=0 && index< primes.length) {
+            index++;
+        }
+
+        if(index== primes.length) {
+            primes.push(number);
+        }
+    }
+
+    //restructure array based on conditions
+    let newArray= [];
+    for(let i=0; i< array.length; i++) {
+        let string= "";
+        let number= 0;
+
+        if(!primes.includes(array[i])) {
+            number= array[i];
+            if(array[i]%3 ==0) {
+                string= "Foo";
+            }
+
+            if(array[i]%5 ==0) {
+                string+= "Bar";
+            }
+
+            if(string!= "") {
+                newArray.push(string);
+            } else {
+                newArray.push(number);
+            }
+        }
+    }
+
+    array= newArray;
+    let result= array.toString().split(",").join(", ");
+
+    console.log(result);
+    document.getElementById("result").innerHTML= `${result}`;
+}
+
+
+
+</script>
+</html>

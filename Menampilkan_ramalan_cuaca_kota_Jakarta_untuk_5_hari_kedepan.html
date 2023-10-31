@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class= "header">
+        <div class= "title">Mini Test 2. Menampilkan ramalan cuaca kota Jakarta untuk 5 hari kedepan</div>
+        <div class= "subtitle">Developer: Abdullah Azzam</div>
+    </div>
+    <div class= "main">
+        <button class= "button" id= "button" onclick= "run()">Run</button>
+    </div>
+    <div class= "result" id= "result"></div>
+</body>
+
+<style>
+    body {
+        height: 500px;
+        width: 99vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+    }
+
+    .header {
+        height: 100px;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .title {
+        font-size: 25px;
+        color: #552222;
+        font-weight: bold;
+        width: 80vw;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .subtitle {
+        height: 50px;
+        font-size: 18px;
+        color: #333333;
+    }
+     
+    .main {
+        height: 150px;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .input {
+        height: 40px;
+        width: 80vw;
+        border-radius: 6px;
+        border-color: grey;
+        color: black;
+        padding: 5px;
+        box-sizing: border-box;
+        font-size: 20px;
+    }
+
+    .button {
+        margin-top: 15px;
+        height: 40px;
+        width: 200px;
+        font-size: 20px;
+        color: black;
+        background-color: aquamarine;
+        border-radius: 5px;
+    }
+
+    .button:active {
+        background-color: black;
+        color: white;
+    }
+
+    .result {
+        height: 200px;
+        width: 80vw;
+        border-color: #222222;
+        border-radius: 7px;
+        border-style: solid;
+        border-width: 1px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 20px 10px 20px;
+        font-size: 18px;
+        text-align: left;
+        box-sizing: border-box;
+        word-break: break-all;
+    }
+
+
+</style>
+
+<script>
+
+// ---------------------------------------Program Script---------------------------------------------//
+
+//initial variables
+const apiKey= "2RPC45GWNEZMY6SVM2HY6B6WA";
+endpoint= `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/jakarta?unitGroup=metric&key=${apiKey}&contentType=json`;
+
+
+//WeatherData class
+class WeatherData {
+    constructor(days, dates, temperatures) {
+        this.days= days;
+        this.dates= dates;
+        this.temperatures= temperatures;
+    }
+
+    constructTimeLine(data) {
+        let localDays= [];
+        let localDates= [];
+        let localTemperatures= [];
+
+        for(let i=0; i< Math.min(data["days"].length, 6); i++) {
+            let dayData= data["days"][i];
+
+            localDays.push(this.getDayName(new Date(dayData["datetime"].toString())).slice(0, 3));
+            localDates.push(this.getDateString(dayData["datetime"]));
+            localTemperatures.push(dayData["feelslike"]);
+        }
+
+        this.days= localDays;
+        this.dates= localDates;
+        this.temperatures= localTemperatures;
+
+        console.log(`days= ${this.days}`);
+    }
+
+    getDayName(date = new Date(), locale = 'en-US') {
+        return date.toLocaleDateString(locale, {weekday: 'long'});
+    }
+
+    getDateString(text) {
+        let months= [
+            "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+
+        let arr= text.split("-");
+        let day= arr[2];
+        let month= months[parseInt(arr[1]-1)];
+        let year= arr[0];
+
+        return `${day} ${month} ${year}`;
+    }
+}
+
+//run function
+var localData= new WeatherData([], [], []);
+
+async function run() {
+    document.getElementById("button").innerHTML= "Loading...";
+
+    //fetching api
+    await fetch(endpoint)
+        .then(res=> res.json()).then((json)=> setData(json));
+
+    document.getElementById("button").innerHTML= "Run";
+    
+}
+
+async function setData(data) {
+    await localData.constructTimeLine(data);
+
+    let outputString= constructString(localData);
+
+    document.getElementById("result").innerHTML= outputString;
+}
+
+function constructString(data) {
+    let string= "Weather Forecast: <br>";
+
+    for(let i=0; i< data.days.length; i++) {
+        string+= `${data.days[i]}, ${data.dates[i]}: ${data.temperatures[i]}°C <br>` ;
+    }
+
+    return string;
+}
+
+
+</script>
+</html>
