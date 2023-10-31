@@ -112,7 +112,8 @@
 //initial variables
 const apiKey= "2RPC45GWNEZMY6SVM2HY6B6WA";
 const baseUrl= `https://weather.visualcrossing.com`;
-const endpoint= `${baseUrl}/VisualCrossingWebServices/rest/services/timeline/jakarta?unitGroup=metric&key=${apiKey}&contentType=json`;
+const query= `VisualCrossingWebServices/rest/services/timeline/jakarta?unitGroup=metric`;
+const endpoint= `${baseUrl}/${query}&key=${apiKey}&contentType=json`;
 
 
 //WeatherData class
